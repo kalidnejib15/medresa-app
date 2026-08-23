@@ -1,0 +1,157 @@
+export default {
+  // Common
+  save: 'Save',
+  search: 'Search',
+  edit: 'Edit',
+  delete: 'Delete',
+  cancel: 'Cancel',
+  close: 'Close',
+  savedSuccessfully: 'Saved Successfully',
+  saved: 'Student saved successfully',
+  error: 'An error occurred',
+  required: 'Please fill in all required fields',
+  loading: 'Loading...',
+  noData: 'No records found.',
+  confirm: 'Confirm',
+  deleteStudentConfirm: 'Are you sure you want to delete this student?',
+  yes: 'Yes',
+  no: 'No',
+
+  // Auth
+  login: 'Login',
+  logout: 'Logout',
+  phone: 'Phone Number',
+  password: 'Password',
+  loginError: 'Invalid phone or password',
+  admin: 'Admin',
+  ustaz: 'Ustaz',
+
+  // App Info
+  appName: 'Abubeker Medresa',
+  appSubtitle: 'Management Portal',
+  welcomeBack: 'Welcome Back',
+
+  // Tabs
+  attendance: 'Attendance',
+  students: 'Students',
+  fees: 'Fees',
+  finance: 'Finance',
+  settings: 'Settings',
+  progress: 'Progress',
+  dashboard: 'Dashboard',
+  teams: 'Teams',
+
+  // Dashboard
+  totalStudents: 'Total Students',
+  quickActions: 'Quick Actions',
+  markAttendance: 'Mark Attendance',
+  medresaTime: 'Medresa Time',
+  newRegistration: 'Register new student',
+
+  // Attendance
+  boys: 'Boys',
+  girls: 'Girls',
+  markAllPresent: 'Mark All Present',
+  saveAttendance: 'Save Attendance',
+  present: 'Present',
+  absent: 'Absent',
+  late: 'Late',
+  excused: 'Excused',
+  dailyTask: 'Daily Task',
+  lesson: 'Lesson (Surah/Ayah)',
+  performance: 'Performance Rating',
+  saveProgress: 'Save Progress',
+  notes: 'Ustaz Notes',
+  syncing: 'Syncing Data...',
+  generateCard: 'Generate Enrollment Card',
+  lessonDetails: 'Lesson / Surah',
+  rating: 'Rating (1–5)',
+  success: 'Saved!',
+  attendanceSaved: 'Attendance saved successfully.',
+  progressHistory: 'Qirat Progress History',
+  recentAttendance: 'Recent Attendance',
+  noStudents: 'No students in this level yet.',
+  saveQirat: 'Save Qirat',
+  qiratRecord: 'Qirat Record',
+  ustazNotes: 'Ustaz Notes (Optional)',
+  history: 'History',
+  page_number: 'Page Number',
+  ayah_from: 'Ayah From',
+  ayah_to: 'Ayah To',
+  lesson_details: 'Lesson Details',
+
+  // Student Registration
+  addStudent: 'Add Student',
+  basicInfo: 'Basic Information',
+  nameAm: 'Full Name (Amharic)',
+  nameEn: 'Full Name (English)',
+  gender: 'Gender',
+  male: 'Male',
+  female: 'Female',
+  level: 'Level',
+  parentPhone: 'Parent Phone',
+  parentName: 'Parent / Guardian Name',
+  address: 'Home Address / Zone',
+  medicalNotes: 'Medical Notes',
+  adminOnly: 'Only visible to Admins',
+  confidential: 'Confidential',
+  enrolledDate: 'Enrolled Date',
+  selectLevel: 'Select Level',
+  houseNo: 'House No. / Address',
+  primaryPhone: 'Primary Phone',
+  medicalHealth: 'Medical / Health',
+  grades: 'Grades',
+  addGrade: 'Add Grade',
+  subject: 'Subject',
+  term: 'Term',
+  score: 'Score',
+  maxScore: 'Max Score',
+  term1: 'Term 1',
+  term2: 'Term 2',
+  final: 'Final Exam',
+  gradeHistory: 'Grade History',
+
+  // Levels
+  nuraniya: 'Nuraniya',
+  quran1: 'Quran 1',
+  quran2: 'Quran 2',
+  hifz: 'Hifz',
+
+  // Fees
+  all: 'All',
+  paid: 'Paid',
+  partial: 'Partial',
+  unpaid: 'Unpaid',
+  amountDue: 'Due',
+  addPayment: 'Add Payment',
+  exempted: 'Exempted',
+
+  // Settings
+  language: 'Language',
+
+  // Dashboard & Navigation
+  manageKitabs: 'Manage Kitabs',
+  academicReports: 'Reports',
+  manageTeachers: 'Teachers',
+  bulkAssign: 'Bulk Assign',
+  systemSettings: 'Settings',
+
+  // Teams
+  teamNuraniya: 'Team Nuraniya',
+  teamQuran1: 'Team Quran 1',
+  teamHifz: 'Team Hifz',
+  allTeams: 'All Teams',
+
+  // Grades & Academic
+  assessmentComponents: 'Components',
+  totalWeights: 'Total Weights',
+  kitabName: 'Kitab Name',
+  addSubject: 'Add Kitab',
+  rankings: 'Rankings',
+  byTeacher: 'By Teacher',
+
+  // Sync Status
+  synced: 'Synced',
+  pending: 'Pending Sync',
+};
+

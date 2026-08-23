@@ -1,0 +1,157 @@
+export default {
+  // Common
+  save: 'አስቀምጥ',
+  search: 'ፈልግ',
+  edit: 'አስተካክል',
+  delete: 'ሰርዝ',
+  cancel: 'ቢሰረዝ',
+  close: 'ዝጋ',
+  savedSuccessfully: 'በተሳካ ሁኔታ ተቀምጧል',
+  saved: 'ተማሪው ተቀምጧል',
+  error: 'ስህተት ተከስቷል',
+  required: 'ሁሉንም አስፈላጊ መረጃዎች ይሙሉ',
+  loading: 'በመጫን ላይ...',
+  noData: 'መረጃ አልተገኘም።',
+  confirm: 'አረጋግጥ',
+  deleteStudentConfirm: 'ይህንን ተማሪ ለመሰረዝ እርግጠኛ ነዎት?',
+  yes: 'አዎ',
+  no: 'አይ',
+
+  // Auth
+  login: 'ግባ',
+  logout: 'ውጣ',
+  phone: 'ስልክ ቁጥር',
+  password: 'የይለፍ ቃል',
+  loginError: 'የስልክ ቁጥር ወይም የይለፍ ቃል ስህተት ነው',
+  admin: 'አስተዳዳሪ',
+  ustaz: 'ዑስታዝ',
+
+  // App Info
+  appName: 'አቡበከር መድረሳ',
+  appSubtitle: 'የተማሪዎች መቆጣጠሪያ መተግበሪያ',
+  welcomeBack: 'እንኳን ደህና መጡ',
+
+  // Tabs
+  attendance: 'መገኘት',
+  students: 'ተማሪዎች',
+  fees: 'ክፍያ',
+  finance: 'ፋይናንስ',
+  settings: 'ቅንብሮች',
+  progress: 'ውጤት',
+  dashboard: 'ዳሽቦርድ',
+  teams: 'ቡድኖች',
+
+  // Dashboard
+  totalStudents: 'ጠቅላላ ተማሪዎች',
+  quickActions: 'ፈጣን እርምጃዎች',
+  markAttendance: 'መገኘት መዝግብ',
+  medresaTime: 'የምሽት ትምህርት ጊዜ',
+  newRegistration: 'አዲስ ተማሪ ምዝገባ',
+
+  // Attendance
+  boys: 'ወንዶች',
+  girls: 'ሴቶች',
+  markAllPresent: 'ሁሉንም መገኘት መዝግብ',
+  saveAttendance: 'መገኘት መዝግብ',
+  present: 'ተገኝቷል',
+  absent: 'ቀርቷል',
+  late: 'ዘግይቷል',
+  excused: 'ፍቃድ',
+  dailyTask: 'የዕለት ተግባር',
+  lesson: 'ትምህርት (ሱራ/አያህ)',
+  performance: 'የአቀራረብ ደረጃ',
+  saveProgress: 'ውጤት መዝግብ',
+  notes: 'የዑስታዝ አስተያየት',
+  syncing: 'መረጃ ከመስመር ላይ ጋር እየተገናኘ ነው...',
+  generateCard: 'የምዝገባ ካርድ ማተም',
+  lessonDetails: 'ትምህርት / ሱራ',
+  rating: 'ደረጃ (1–5)',
+  success: 'ተቀምጧል!',
+  attendanceSaved: 'የመገኘት መረጃ ተቀምጧል።',
+  progressHistory: 'የቁርዓን እድገት ታሪክ',
+  recentAttendance: 'ቅርብ ቀናት መገኘት',
+  noStudents: 'ተማሪዎች አልተገኙም።',
+  saveQirat: 'ቁርዓን አስቀምጥ',
+  qiratRecord: 'የቁርዓን ምዝገባ',
+  ustazNotes: 'የዑስታዝ አስተያየት (ምርጫ)',
+  history: 'ታሪክ',
+  page_number: 'የገጽ ቁጥር',
+  ayah_from: 'ከአያህ',
+  ayah_to: 'እስከ አያህ',
+  lesson_details: 'የትምህርት ዝርዝር',
+
+  // Student Registration
+  addStudent: 'አዲስ ተማሪ መዝግብ',
+  basicInfo: 'መሠረታዊ መረጃ',
+  nameAm: 'ሙሉ ስም (በአማርኛ)',
+  nameEn: 'ሙሉ ስም (በእንግሊዝኛ)',
+  gender: 'ጾታ',
+  male: 'ወንድ',
+  female: 'ሴት',
+  level: 'ደረጃ',
+  parentPhone: 'የወላጅ ስልክ',
+  parentName: 'የወላጅ / አሳዳጊ ስም',
+  address: 'የቤት አድራሻ / ዞን',
+  medicalNotes: 'የጤና ማስታወሻ',
+  adminOnly: 'ለአስተዳዳሪዎች ብቻ ይታያል',
+  confidential: 'ሚስጥራዊ',
+  enrolledDate: 'የተመዘገበበት ቀን',
+  selectLevel: 'ደረጃ ይምረጡ',
+  houseNo: 'የቤት ቁጥር / አድራሻ',
+  primaryPhone: 'ዋና ስልክ',
+  medicalHealth: 'ሕክምና / ጤና',
+  grades: 'ውጤቶች',
+  addGrade: 'ውጤት ጨምር',
+  subject: 'ትምህርት',
+  term: 'ክፍለ ጊዜ',
+  score: 'ውጤት',
+  maxScore: 'ከፍተኛ ውጤት',
+  term1: '1ኛ ተርም',
+  term2: '2ኛ ተርም',
+  final: 'የመጨረሻ ፈተና',
+  gradeHistory: 'የውጤት ታሪክ',
+
+  // Levels
+  nuraniya: 'ኑራኒያ',
+  quran1: 'ቁርአን 1',
+  quran2: 'ቁርአን 2',
+  hifz: 'ሂፍዝ',
+
+  // Fees
+  all: 'ሁሉም',
+  paid: 'ተከፍሏል',
+  partial: 'ከፊል',
+  unpaid: 'ያልተከፈለ',
+  amountDue: 'ሊከፈል የሚገባ',
+  addPayment: 'ክፍያ ጨምር',
+  exempted: 'ነፃ',
+
+  // Settings
+  language: 'ቋንቋ',
+
+  // Dashboard & Navigation
+  manageKitabs: 'ኪታብ ማስተዳደሪያ',
+  academicReports: 'አካዳሚክ ሪፖርት',
+  manageTeachers: 'ዑስታዞች',
+  bulkAssign: 'የቡድን ምደባ',
+  systemSettings: 'ቅንብሮች',
+
+  // Teams
+  teamNuraniya: 'ቡድን ኑራኒያ',
+  teamQuran1: 'ቡድን ቁርአን 1',
+  teamHifz: 'ቡድን ሂፍዝ',
+  allTeams: 'ሁሉም ቡድን',
+
+  // Grades & Academic
+  assessmentComponents: 'የምዘና ምድቦች',
+  totalWeights: 'ጠቅላላ ድምር',
+  kitabName: 'የኪታብ ስም',
+  addSubject: 'ኪታብ ጨምር',
+  rankings: 'ደረጃዎች',
+  byTeacher: 'በዑስታዝ',
+
+  // Sync Status
+  synced: 'ተገናኝቷል',
+  pending: 'ያልተላከ መረጃ',
+};
+

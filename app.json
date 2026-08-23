@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "Abubeker Medersa",
+    "slug": "abubeker-medersa-inst",
+    "version": "1.0.0",
+    "newArchEnabled": true,
+    "cli": {
+      "appVersionSource": "remote"
+    },
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "medresa",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.khamalcom.abubekermedersa"
+    },
+    "android": {
+      "package": "com.khamalcom.abubekermedersa"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font",
+      "expo-asset",
+      "@react-native-community/datetimepicker",
+      "expo-sqlite",
+      "expo-notifications"
+    ],
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#1a6b3c"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bc213b92-6d3e-4bed-8136-2f2ad68e8b12"
+      }
+    },
+    "owner": "guzo-delivery"
+  }
+}

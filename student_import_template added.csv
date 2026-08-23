@@ -1,0 +1,15 @@
+name_am,name_en,gender,level_id,dob,school_level,parent_name,parent_phone,subcity,woreda,block,house,emergency_name,emergency_phone,medical_notes,is_yetim
+አህመድ ሙሐመድ,Ahmed Mohammed,male,l1m,2015-05-12 ,Grade 4,Mohammed Ali,911000000,Kolfe,5,B22,104,Sara Ali,988000000,None,0
+ፋጡማ አሊ,Fatuma Ali,female,l4f,2018-08-20 ,Grade 8,Ali Kedir,922000000,Lideta,3,C11,205,Kedir Ali,977000000,None,1
+,Mohammed Abubeker,male,l4m,2004-06-20 ,Grade 7,ABbubeker,0910101010 lemi,,5,B64,34,Abubeker,0910101010,None ,0
+,Musaab Abubeker,male,l4m,2003-07-19 ,Grade 8,Seada,0923309261,lemi,5,B34,23,Seada,0923309261,None,0
+,Rami Muhaba,male ,l4m,2002-08-23 ,Grade 10,Muhaba,0913873711,lemi,5,B23,10,Muhaba,0913873711,None,0
+,Ahmed Mairuf,male,l3m,2004-07-03 ,Grade 6,Mairuf,0914777572,lemi,5,B23,17,Mairuf,091477572,None,1
+,Firdews Mohammed,female,l2f,2007-08-14 ,Grade 3,Mohammed,0911198765,lem,5,Addis,Addis,Mohammed,0910101010,None,0
+,Abubeker Nejib,male,l2m,2009-03-04 ,Grade 3,Nejib,0911697889,lemi,5,B61,5,Nejib,0911697889,K,0
+,Usman Mohammed,male,l2m,2012-04-23 ,Grade 2,Mohammed,0911121314,lem,5,B129,13,Mohammed,0911121314,l,0
+,Hikmet Nejib,female,l4f,2005-01-27 ,Grade 7,Nejib,0911697889,lemi,5,B61,5,Nejib,0911697889,None,0
+,Maida Abubeker,female,l3f,2006-06-23 ,Grade 5,Seada,0923309261,lemi,5,B34,23,Seada,0923309261,None,0
+,Maida Mohammed,female,l3f,2006-07-14 ,Grade 5,Mohammed,0987787898,lemi,5,B12,12,Mohammed,)987787898,None,0
+,Abuzer,male,l1m,2013-07-01 ,Grade 2,Moahmemd,0911121314,lemi,5,Addis,Addis,Mohammed,0912131415,None,0
+,Iman Sadiq,female,l1f,2013-08-12 ,UKG,Sadiq,0987654312,lemi,5,Adis,Addos,Sadiq,0987654312,None,0
