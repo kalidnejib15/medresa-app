@@ -104,12 +104,12 @@ export const useStudentStore = create<StudentState>((set, get) => ({
 
         const ustazGpaSubquery = `
           COALESCE(
-            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.id IN (SELECT weight_id FROM student_grades sg WHERE sg.student_id = s.id)), 0)) * 100, 0)
+            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.subject_id IN (SELECT DISTINCT gw2.subject_id FROM grade_weights gw2 JOIN student_grades sg2 ON gw2.id = sg2.weight_id WHERE sg2.student_id = s.id)), 0)) * 100, 0)
              FROM student_grades g WHERE g.student_id = s.id),
             0
           ) as gpa,
           COALESCE(
-            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.id IN (SELECT weight_id FROM student_grades sg WHERE sg.student_id = s.id AND sg.ustaz_id = ?)), 0)) * 100, 0)
+            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.subject_id IN (SELECT DISTINCT gw2.subject_id FROM grade_weights gw2 JOIN student_grades sg2 ON gw2.id = sg2.weight_id WHERE sg2.student_id = s.id AND sg2.ustaz_id = ?)), 0)) * 100, 0)
              FROM student_grades g WHERE g.student_id = s.id AND g.ustaz_id = ?),
             0
           ) as subject_avg,
@@ -184,7 +184,7 @@ export const useStudentStore = create<StudentState>((set, get) => ({
 
       const adminGpaSubquery = `
         COALESCE(
-          (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.id IN (SELECT weight_id FROM student_grades sg WHERE sg.student_id = s.id)), 0)) * 100, 0)
+          (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.subject_id IN (SELECT DISTINCT gw2.subject_id FROM grade_weights gw2 JOIN student_grades sg2 ON gw2.id = sg2.weight_id WHERE sg2.student_id = s.id)), 0)) * 100, 0)
            FROM student_grades g WHERE g.student_id = s.id),
           0
         ) as gpa,
@@ -257,11 +257,14 @@ export const useStudentStore = create<StudentState>((set, get) => ({
     try {
       await db.runAsync(
         `INSERT INTO students
-         (id, name_am, name_en, dob, school_level, gender, level_id, enroll_date, photo_url, is_yetim, is_active, notes, created_at, updated_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+         (id, name_am, name_en, dob, school_level, gender, level_id, enroll_date, photo_url, is_yetim, is_active, last_page_learnt, has_tutor, tutor_days, tutor_arrival_time, academic_year, notes, created_at, updated_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
         [id, cleanNameAm, cleanNameEn, data.dob ?? null, data.school_level ?? null, data.gender,
           data.level_id, data.enroll_date, data.photo_url ?? null,
-          data.is_yetim ? 1 : 0, data.is_active ? 1 : 0, data.notes ?? null, now, now] as any[]
+          data.is_yetim ? 1 : 0, data.is_active ? 1 : 0,
+          data.last_page_learnt ?? null, data.has_tutor ? 1 : 0, data.tutor_days ?? null, data.tutor_arrival_time ?? null,
+          data.academic_year ?? '2019',
+          data.notes ?? null, now, now] as any[]
       );
 
       if (privateData) {
@@ -272,6 +275,7 @@ export const useStudentStore = create<StudentState>((set, get) => ({
           [id, privateData.parent_name?.trim() ?? null, cleanPhone,
             privateData.address?.trim() ?? null, privateData.emergency_contact?.trim() ?? null, privateData.medical_notes?.trim() ?? null]
         );
+        await queueSync('student_private', id, 'insert');
       }
 
       const feeId = Crypto.randomUUID();
@@ -375,12 +379,12 @@ export const useStudentStore = create<StudentState>((set, get) => ({
 
         const ustazGpaSubquery = `
           COALESCE(
-            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.id IN (SELECT weight_id FROM student_grades sg WHERE sg.student_id = s.id)), 0)) * 100, 0)
+            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.subject_id IN (SELECT DISTINCT gw2.subject_id FROM grade_weights gw2 JOIN student_grades sg2 ON gw2.id = sg2.weight_id WHERE sg2.student_id = s.id)), 0)) * 100, 0)
              FROM student_grades g WHERE g.student_id = s.id),
             0
           ) as gpa,
           COALESCE(
-            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.id IN (SELECT weight_id FROM student_grades sg WHERE sg.student_id = s.id AND sg.ustaz_id = ?)), 0)) * 100, 0)
+            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.subject_id IN (SELECT DISTINCT gw2.subject_id FROM grade_weights gw2 JOIN student_grades sg2 ON gw2.id = sg2.weight_id WHERE sg2.student_id = s.id AND sg2.ustaz_id = ?)), 0)) * 100, 0)
              FROM student_grades g WHERE g.student_id = s.id AND g.ustaz_id = ?),
             0
           ) as subject_avg,
@@ -434,7 +438,7 @@ export const useStudentStore = create<StudentState>((set, get) => ({
 
         const adminGpaSubquery = `
           COALESCE(
-            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.id IN (SELECT weight_id FROM student_grades sg WHERE sg.student_id = s.id)), 0)) * 100, 0)
+            (SELECT ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights gw WHERE gw.subject_id IN (SELECT DISTINCT gw2.subject_id FROM grade_weights gw2 JOIN student_grades sg2 ON gw2.id = sg2.weight_id WHERE sg2.student_id = s.id)), 0)) * 100, 0)
              FROM student_grades g WHERE g.student_id = s.id),
             0
           ) as gpa,
@@ -503,7 +507,7 @@ export const useStudentStore = create<StudentState>((set, get) => ({
     try {
       await db.withTransactionAsync(async () => {
         // 1. Separate core student fields and private fields
-        const coreFields = ['name_am', 'name_en', 'dob', 'school_level', 'gender', 'level_id', 'enroll_date', 'photo_url', 'is_yetim', 'is_active', 'notes', 'quran_teacher_id', 'kitab_teacher_id'];
+        const coreFields = ['name_am', 'name_en', 'dob', 'school_level', 'gender', 'level_id', 'enroll_date', 'photo_url', 'is_yetim', 'is_active', 'last_page_learnt', 'has_tutor', 'tutor_days', 'tutor_arrival_time', 'academic_year', 'notes', 'quran_teacher_id', 'kitab_teacher_id'];
         const privateFields = ['parent_name', 'parent_phone', 'address', 'emergency_contact', 'medical_notes'];
 
         const coreToUpdate = Object.keys(data).filter(k => coreFields.includes(k));

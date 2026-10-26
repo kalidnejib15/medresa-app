@@ -186,7 +186,15 @@ export default function AddStudentScreen() {
   const [emergency,   setEmergency]   = useState({ name: '', phone: '' });
   const [medical,     setMedical]     = useState('');
   const [isYetim,     setIsYetim]     = useState(false);
+  const [lastPageLearnt, setLastPageLearnt] = useState('');
+  const [hasTutor,    setHasTutor]    = useState(false);
+  const [tutorDays,   setTutorDays]   = useState<string[]>([]);
+  const [tutorArrivalTime, setTutorArrivalTime] = useState('');
   const [saving,      setSaving]      = useState(false);
+
+  const toggleTutorDay = (day: string) => {
+    setTutorDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]);
+  };
 
   // 🛡️ Photo state
   const [photoUri,    setPhotoUri]    = useState<string | null>(null);   // local preview
@@ -324,6 +332,11 @@ export default function AddStudentScreen() {
         is_active: 1,
         photo_url: photoUrl ?? undefined,   // 🛡️ Save the cloud URL
         school_level: schoolLevel || undefined, // 🛡️ Regular/academic school level (its own DB column)
+        last_page_learnt: lastPageLearnt || undefined,
+        has_tutor: hasTutor ? 1 : 0,
+        tutor_days: hasTutor && tutorDays.length > 0 ? tutorDays.join(', ') : undefined,
+        tutor_arrival_time: hasTutor && tutorArrivalTime ? tutorArrivalTime : undefined,
+        academic_year: '2019'
       },
       { 
         parent_name: parentName, 
@@ -434,6 +447,79 @@ export default function AddStudentScreen() {
                 />
               </View>
             </View>
+          </SectionCard>
+
+          {/* ── Section: Qir'at Progress & Academic Tutor ── */}
+          <SectionCard icon="book-education-outline" title={i18n.language === 'am' ? 'ቂርዓት እና የአካዳሚክ አስጠኚ' : "Qir'at & Academic Tutor"} accent="#d97706">
+            <FieldLabel label={i18n.language === 'am' ? 'የመጨረሻ የቀሩት ገጽ (ቂርዓት / ኑራኒያ / ቁርአን)' : 'Last Page Learnt in Qir\'at'} />
+            <TextInput
+              value={lastPageLearnt} onChangeText={setLastPageLearnt}
+              mode="outlined" style={styles.input}
+              placeholder={i18n.language === 'am' ? 'ምሳሌ፡ ኑራኒያ ገጽ 15 ወይም ጁዝ 3' : 'e.g. Nuraniya Page 15 or Juz 3'}
+              activeOutlineColor="#d97706"
+              outlineColor="#e2e8f0"
+              theme={{ colors: { background: 'white' } }}
+            />
+
+            <FieldLabel label={i18n.language === 'am' ? 'የቤት አካዳሚክ አስጠኚ አለው?' : 'Has Academic Tutor?'} />
+            <View style={styles.genderRow}>
+              <TouchableOpacity
+                onPress={() => setHasTutor(false)}
+                style={[styles.genderBtn, !hasTutor ? { backgroundColor: '#64748b', borderColor: '#64748b' } : { backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }]}
+              >
+                <MaterialCommunityIcons name="close-circle-outline" size={20} color={!hasTutor ? 'white' : '#64748b'} />
+                <Text style={[styles.genderTxt, !hasTutor && { color: 'white' }]}>{i18n.language === 'am' ? 'የለውም' : 'No'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setHasTutor(true)}
+                style={[styles.genderBtn, hasTutor ? { backgroundColor: '#d97706', borderColor: '#d97706' } : { backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }]}
+              >
+                <MaterialCommunityIcons name="check-circle-outline" size={20} color={hasTutor ? 'white' : '#d97706'} />
+                <Text style={[styles.genderTxt, hasTutor && { color: 'white' }]}>{i18n.language === 'am' ? 'አለው' : 'Yes'}</Text>
+              </TouchableOpacity>
+            </View>
+
+            {hasTutor && (
+              <View style={{ marginTop: 14 }}>
+                <FieldLabel label={i18n.language === 'am' ? 'አስጠኚ ያለውባቸው ቀናት (ከ1 በላይ መምረጥ ይቻላል)' : 'Tutor Days (Select 1 or more)'} />
+                <View style={styles.levelGrid}>
+                  {[
+                    { id: 'Mon', en: 'Monday', am: 'ሰኞ' },
+                    { id: 'Tue', en: 'Tuesday', am: 'ማክሰኞ' },
+                    { id: 'Wed', en: 'Wednesday', am: 'ረቡዕ' },
+                    { id: 'Thu', en: 'Thursday', am: 'ሐሙስ' },
+                    { id: 'Fri', en: 'Friday', am: 'አርብ' },
+                    { id: 'Sat', en: 'Saturday', am: 'ቅዳሜ' },
+                    { id: 'Sun', en: 'Sunday', am: 'እሁድ' },
+                  ].map(day => {
+                    const active = tutorDays.includes(day.en);
+                    return (
+                      <TouchableOpacity
+                        key={day.id}
+                        onPress={() => toggleTutorDay(day.en)}
+                        style={[styles.levelChip, active && { backgroundColor: '#fef3c7', borderColor: '#d97706' }]}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={[styles.levelChipTxt, active && { color: '#b45309', fontWeight: '800' }]}>
+                          {i18n.language === 'am' ? day.am : day.en}
+                        </Text>
+                        {active && <View style={[styles.levelCheckDot, { backgroundColor: '#d97706' }]} />}
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+
+                <FieldLabel label={i18n.language === 'am' ? 'በአስጠኚ ቀናት ወደ መድረሳ የሚመጣበት ሰዓት (ለአቴንዳንስ)' : 'Expected Arrival Time on Tutor Days (for Attendance)'} />
+                <TextInput
+                  value={tutorArrivalTime} onChangeText={setTutorArrivalTime}
+                  mode="outlined" style={styles.input}
+                  placeholder={i18n.language === 'am' ? 'ምሳሌ፡ 4:30 PM ወይም 10:30' : 'e.g. 04:30 PM'}
+                  activeOutlineColor="#d97706"
+                  outlineColor="#e2e8f0"
+                  theme={{ colors: { background: 'white' } }}
+                />
+              </View>
+            )}
           </SectionCard>
 
           {/* ── Section 2: Gender ── */}

@@ -1,0 +1,40 @@
+name: Build Android APK (EAS Cloud)
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "EAS Build Profile"
+        required: true
+        type: choice
+        options:
+          - "preview"
+          - "production"
+        default: "preview"
+
+jobs:
+  eas-build:
+    name: EAS Cloud APK Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: 3. Setup Expo and EAS CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 4. Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: 5. Trigger EAS Android APK Build
+        run: eas build --platform android --profile ${{ github.event.inputs.profile || 'preview' }} --non-interactive

@@ -231,7 +231,7 @@ export const useGradeStore = create<GradeState>((set, get) => ({
         sub.name_am as subject_name_am,
         g.ustaz_id,
         COALESCE(u.name, 'Kitab Ustaz') as ustaz_name,
-        ROUND((SUM(g.score) * 1.0 / NULLIF(SUM(gw.weight), 0)) * 100, 0) as subject_score,
+        ROUND((SUM(g.score) * 1.0 / NULLIF((SELECT SUM(weight) FROM grade_weights WHERE subject_id = sub.id), 0)) * 100, 0) as subject_score,
         COUNT(DISTINCT g.weight_id) as component_count,
         MAX(g.date) as latest_date,
         (SELECT tsl3.group_name FROM teacher_student_links tsl3 WHERE tsl3.student_id = s.id AND tsl3.type = 'kitab' AND tsl3.group_name IS NOT NULL AND tsl3.group_name != '' LIMIT 1) as kitab_group_override

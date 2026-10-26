@@ -88,6 +88,11 @@ export interface Student {
   emergency_contact?: string;
   medical_notes?: string;
   fee_status?: FeeStatus;
+  last_page_learnt?: string;
+  has_tutor?: number;
+  tutor_days?: string;
+  tutor_arrival_time?: string;
+  academic_year?: string;
   // joined
   level?: Level;
 }

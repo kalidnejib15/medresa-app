@@ -195,6 +195,11 @@ export default function StudentDetailScreen() {
         name_en: s.name_en,
         dob: s.dob,
         school_level: s.school_level,
+        last_page_learnt: s.last_page_learnt,
+        has_tutor: s.has_tutor,
+        tutor_days: s.tutor_days,
+        tutor_arrival_time: s.tutor_arrival_time,
+        academic_year: s.academic_year,
         parent_name: s.parent_name,
         parent_phone: s.parent_phone,
         address: s.address,
@@ -603,7 +608,7 @@ export default function StudentDetailScreen() {
 
   if (isLoading || !student || student.id !== currentId) {
     return (
-      <View style={styles.loadingContainer || styles.center}>
+      <View style={styles.center}>
         <ActivityIndicator size="large" color={COLORS.primary} />
         <Text style={{ marginTop: 15, color: '#64748b', fontWeight: '600' }}>{i18n.language === 'am' ? 'የተማሪ መዝገብ በመዘጋጀት ላይ...' : 'Fetching Student Dossier...'}</Text>
       </View>
@@ -697,6 +702,20 @@ export default function StudentDetailScreen() {
                     <Text style={[styles.regVal, { color: student.is_yetim ? '#16a34a' : '#64748b' }]}>
                       {student.is_yetim ? 'YES (SPONSORED)' : 'NO (STANDARD FEE)'}
                     </Text>
+                  </View>
+                  <View style={styles.regItem}>
+                    <Text style={styles.regLabel}>{i18n.language === 'am' ? 'የቀሩት ገጽ (ቂርዓት)' : 'QIR\'AT LAST PAGE'}</Text>
+                    <Text style={styles.regVal}>{student.last_page_learnt || '---'}</Text>
+                  </View>
+                  <View style={styles.regItem}>
+                    <Text style={styles.regLabel}>{i18n.language === 'am' ? 'የአካዳሚክ አስጠኚ' : 'ACADEMIC TUTOR'}</Text>
+                    <Text style={[styles.regVal, { color: student.has_tutor ? '#d97706' : '#64748b' }]}>
+                      {student.has_tutor ? (student.tutor_days ? `Yes (${student.tutor_days}${student.tutor_arrival_time ? ' @ ' + student.tutor_arrival_time : ''})` : 'Yes') : 'No'}
+                    </Text>
+                  </View>
+                  <View style={styles.regItem}>
+                    <Text style={styles.regLabel}>{i18n.language === 'am' ? 'የትምህርት ዘመን' : 'ACADEMIC YEAR'}</Text>
+                    <Text style={styles.regVal}>{student.academic_year || '2019'}</Text>
                   </View>
                 </View>
               </Surface>
@@ -1106,6 +1125,21 @@ export default function StudentDetailScreen() {
             </Text>
             <TextInput key={`dob_${student?.id}`} label={i18n.language === 'am' ? 'የተወለዱበት ቀን (YYYY-MM-DD)' : 'Date of Birth (YYYY-MM-DD)'} defaultValue={editFormRef.current.dob || ''} onChangeText={v => { editFormRef.current.dob = v; }} mode="outlined" style={styles.input} />
             <TextInput key={`school_level_${student?.id}`} label={i18n.language === 'am' ? 'አካዳሚክ ትምህርት ቤት ደረጃ' : 'Regular School Level'} defaultValue={editFormRef.current.school_level || ''} onChangeText={v => { editFormRef.current.school_level = v; }} mode="outlined" style={styles.input} placeholder={i18n.language === 'am' ? 'ለምሳሌ 5ኛ ክፍል' : 'e.g. 5th Grade'} />
+            <TextInput key={`last_page_learnt_${student?.id}`} label={i18n.language === 'am' ? 'የመጨረሻ የቀሩት ገጽ (ቂርዓት / ኑራኒያ / ቁርአን)' : 'Last Page Learnt in Qir\'at'} defaultValue={editFormRef.current.last_page_learnt || ''} onChangeText={v => { editFormRef.current.last_page_learnt = v; }} mode="outlined" style={styles.input} placeholder={i18n.language === 'am' ? 'ምሳሌ፡ ኑራኒያ ገጽ 15 ወይም ጁዝ 3' : 'e.g. Nuraniya Page 15'} />
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10, backgroundColor: '#fef3c7', borderRadius: 12, marginBottom: 12, marginTop: 8 }}>
+              <Text style={{ fontWeight: '700', color: '#92400e' }}>{i18n.language === 'am' ? 'የቤት አካዳሚክ አስጠኚ አለው?' : 'Has Academic Tutor?'}</Text>
+              <Chip selected={editForm.has_tutor === 1} onPress={() => setEditForm({ ...editForm, has_tutor: editForm.has_tutor === 1 ? 0 : 1 })} style={{ backgroundColor: editForm.has_tutor === 1 ? '#d97706' : '#cbd5e1' }} textStyle={{ color: 'white' }}>
+                {editForm.has_tutor === 1 ? (i18n.language === 'am' ? 'አዎ' : 'YES') : (i18n.language === 'am' ? 'የለውም' : 'NO')}
+              </Chip>
+            </View>
+
+            {editForm.has_tutor === 1 && (
+              <>
+                <TextInput key={`tutor_days_${student?.id}`} label={i18n.language === 'am' ? 'አስጠኚ ያላቸው ቀናት (ምሳሌ፡ ሰኞ፣ ረቡዕ)' : 'Tutor Days (e.g. Monday, Wednesday)'} defaultValue={editFormRef.current.tutor_days || ''} onChangeText={v => { editFormRef.current.tutor_days = v; }} mode="outlined" style={styles.input} />
+                <TextInput key={`tutor_arrival_time_${student?.id}`} label={i18n.language === 'am' ? 'የመድረሻ ሰዓት (ምሳሌ፡ 4:30 PM)' : 'Expected Arrival Time (e.g. 04:30 PM)'} defaultValue={editFormRef.current.tutor_arrival_time || ''} onChangeText={v => { editFormRef.current.tutor_arrival_time = v; }} mode="outlined" style={styles.input} />
+              </>
+            )}
 
             <Divider style={{ marginVertical: 20 }} />
             <Text style={{ fontWeight: '800', marginBottom: 10 }}>

@@ -19,7 +19,8 @@ const TABLE_COLUMNS: Record<string, string[]> = {
   students: [
     'id', 'name_am', 'name_en', 'dob', 'gender', 'level_id',
     'enroll_date', 'photo_url', 'is_yetim', 'is_active', 'notes', 'created_at', 'updated_at',
-    'quran_teacher_id', 'kitab_teacher_id', 'school_level'
+    'quran_teacher_id', 'kitab_teacher_id', 'school_level',
+    'last_page_learnt', 'has_tutor', 'tutor_days', 'tutor_arrival_time', 'academic_year'
   ],
   student_private: [
     'student_id', 'parent_name', 'parent_phone', 'address',
@@ -33,10 +34,10 @@ const TABLE_COLUMNS: Record<string, string[]> = {
     'lesson_details', 'rating', 'ustaz_notes', 'created_at', 'ustaz_id', 'session_type'
   ],
   fees: [
-    'id', 'student_id', 'amount_due', 'amount_paid', 'due_date', 'status', 'notes', 'created_at', 'updated_at'
+    'id', 'student_id', 'amount_due', 'amount_paid', 'due_date', 'status', 'notes', 'created_at', 'updated_at', 'prev_year_debt'
   ],
   payments: [
-    'id', 'fee_id', 'amount', 'paid_date', 'received_by', 'notes', 'created_at', 'payment_method', 'reference_number', 'is_verified'
+    'id', 'fee_id', 'amount', 'paid_date', 'received_by', 'notes', 'created_at', 'payment_method', 'reference_number', 'is_verified', 'target_month', 'is_arrears', 'eth_year'
   ],
   levels: [
     'id', 'name', 'name_am', 'gender', 'description'
@@ -251,7 +252,12 @@ export async function syncAll(isForce = false) {
     ];
     for (const table of DYNAMIC_TABLES) {
       // 🚀 Institutional Scale: Pull up to 10k records for academic tables
-      const { data: cloudItems, error } = await supabase.from(table).select('*').limit(10000);
+      // 🛡️ Added .order() so if there are >10k rows, we prioritize fetching the newest ones, avoiding accidental pruning of recent data.
+      let query = supabase.from(table).select('*');
+      if (TABLE_COLUMNS[table]?.includes('created_at')) {
+        query = query.order('created_at', { ascending: false });
+      }
+      const { data: cloudItems, error } = await query.limit(10000);
       if (!error && cloudItems) {
         for (const item of cloudItems) {
           // 🛡️ CRITICAL: Only overwrite local if synced is 1 (no pending local edits)
@@ -260,21 +266,37 @@ export async function syncAll(isForce = false) {
           const pkValues = pkCols.map(c => item[c]);
           const pkWhere = pkCols.map(c => `${c} = ?`).join(' AND ');
 
-          let local = await db.getFirstAsync<{ synced: number }>(
-            `SELECT synced FROM ${table} WHERE ${pkWhere}`,
+          // Only select 'id' if the table actually has an 'id' column
+          const selectCols = pkCol === 'id' ? 'id, synced' : 'synced';
+          
+          let local = await db.getFirstAsync<{ id?: string, synced: number }>(
+            `SELECT ${selectCols} FROM ${table} WHERE ${pkWhere}`,
             pkValues
           ) as any;
 
           // 🛡️ NATURAL KEY FALLBACK: If not found by ID, check unique natural keys to prevent constraint crashes
           if (!local) {
             if (table === 'teacher_attendance') {
-              local = await db.getFirstAsync('SELECT synced FROM teacher_attendance WHERE teacher_id = ? AND date = ?', [item.teacher_id, item.date]);
+              local = await db.getFirstAsync('SELECT id, synced FROM teacher_attendance WHERE teacher_id = ? AND date = ?', [item.teacher_id, item.date]);
             } else if (table === 'attendance') {
-              local = await db.getFirstAsync('SELECT synced FROM attendance WHERE student_id = ? AND date = ? AND time_block_id = ? AND marked_by = ?',
+              local = await db.getFirstAsync('SELECT id, synced FROM attendance WHERE student_id = ? AND date = ? AND time_block_id = ? AND marked_by = ?',
                 [item.student_id, item.date, item.time_block_id, item.marked_by]);
             } else if (table === 'nuraniyah_assessments') {
-              local = await db.getFirstAsync('SELECT synced FROM nuraniyah_assessments WHERE student_id = ? AND date = ? AND category = ?',
+              local = await db.getFirstAsync('SELECT id, synced FROM nuraniyah_assessments WHERE student_id = ? AND date = ? AND category = ?',
                 [item.student_id, item.date, item.category]);
+            } else if (table === 'student_progress') {
+              local = await db.getFirstAsync('SELECT id, synced FROM student_progress WHERE student_id = ? AND date = ? AND ustaz_id = ? AND session_type = ?',
+                [item.student_id, item.date, item.ustaz_id, item.session_type]);
+            } else if (table === 'student_grades') {
+              local = await db.getFirstAsync('SELECT id, synced FROM student_grades WHERE student_id = ? AND weight_id = ? AND ustaz_id = ?',
+                [item.student_id, item.weight_id, item.ustaz_id]);
+            }
+            
+            // 🛡️ FIX: If we found it by Natural Key but the ID differs, ALIGN THE LOCAL ID to the cloud ID!
+            if (local && local.id !== item.id && item.id) {
+               console.log(`🩹 [Sync Merge] Aligning local ID for ${table} from ${local.id} to ${item.id}`);
+               await db.runAsync(`UPDATE ${table} SET id = ? WHERE id = ?`, [item.id, local.id]);
+               local.id = item.id;
             }
           }
 
@@ -321,7 +343,8 @@ export async function syncAll(isForce = false) {
         // 🗑️ PRUNING PHASE: Remove local records that no longer exist in cloud
         // Safety: Only prune if we fetched less than 10k (meaning we likely have the full set)
         // AND greater than 0 to prevent mass-deletion if RLS blocks the query or cloud is empty.
-        if (cloudItems.length > 0 && cloudItems.length < 10000) {
+        // 🛡️ EXCEPTION: Do not prune 'attendance' or 'student_progress' aggressively if RLS is hiding recent inserts.
+        if (cloudItems.length > 0 && cloudItems.length < 10000 && table !== 'attendance') {
           const pkCol = TABLE_PK[table] || 'id';
           if (pkCol === 'id') {
             const cloudIds = cloudItems.map(item => item.id).filter(id => !!id);

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Abubeker Medersa",
-    "slug": "abubeker-medersa-inst",
+    "slug": "abubeker-medresa",
     "version": "1.0.0",
     "newArchEnabled": true,
     "cli": {
@@ -41,9 +41,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "bc213b92-6d3e-4bed-8136-2f2ad68e8b12"
+        "projectId": "da6e9f4d-0007-45bf-8d8d-a9cd8227392d"
       }
     },
-    "owner": "guzo-delivery"
+    "owner": "khamalcom"
   }
 }

@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import * as Crypto from 'expo-crypto';
+import { migrateFeesV2 } from './feesMigration';
 
 let _db: SQLite.SQLiteDatabase | null = null;
 let _dbInitPromise: Promise<SQLite.SQLiteDatabase> | null = null;
@@ -108,6 +109,11 @@ async function initSchema(db: SQLite.SQLiteDatabase): Promise<void> {
       kitab_teacher_id    TEXT,
       is_yetim            INTEGER DEFAULT 0,
       is_active           INTEGER DEFAULT 1,
+      last_page_learnt    TEXT,
+      has_tutor           INTEGER DEFAULT 0,
+      tutor_days          TEXT,
+      tutor_arrival_time  TEXT,
+      academic_year       TEXT DEFAULT '2019',
       notes               TEXT,
       created_at          TEXT DEFAULT (datetime('now')),
       updated_at          TEXT DEFAULT (datetime('now')),
@@ -445,6 +451,11 @@ async function runMigrations(db: SQLite.SQLiteDatabase): Promise<void> {
     "ALTER TABLE payments ADD COLUMN is_verified INTEGER DEFAULT 1;",
     "ALTER TABLE students ADD COLUMN is_yetim INTEGER DEFAULT 0;",
     "ALTER TABLE students ADD COLUMN school_level TEXT;",
+    "ALTER TABLE students ADD COLUMN last_page_learnt TEXT;",
+    "ALTER TABLE students ADD COLUMN has_tutor INTEGER DEFAULT 0;",
+    "ALTER TABLE students ADD COLUMN tutor_days TEXT;",
+    "ALTER TABLE students ADD COLUMN tutor_arrival_time TEXT;",
+    "ALTER TABLE students ADD COLUMN academic_year TEXT DEFAULT '2019';",
     "ALTER TABLE student_progress ADD COLUMN ustaz_id TEXT;",
     "ALTER TABLE teacher_subjects ADD COLUMN synced INTEGER DEFAULT 0;",
     "ALTER TABLE teacher_levels ADD COLUMN synced INTEGER DEFAULT 0;",
@@ -554,6 +565,14 @@ async function runMigrations(db: SQLite.SQLiteDatabase): Promise<void> {
     }
   } catch (e) {
     console.warn('Attendance constraint migration failed (likely already done):', e);
+  }
+
+  // 🛡️ FEES V2 MIGRATION
+  try {
+    await migrateFeesV2(db);
+    console.log('✅ [Migration] Fees V2 schema migration executed.');
+  } catch (e) {
+    console.error('Fees V2 migration failed:', e);
   }
 }
 
